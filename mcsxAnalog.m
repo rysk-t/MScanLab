@@ -1,4 +1,4 @@
-function [Analog] = mcsxAnalog(mfile, ch, thre)
+function [Analog] = mcsxAnalog(mfile, ch, thre, opt)
 % function [Analog] = GetMCSAnalog(mfile, ch, thre)
 %
 %  mfile: mcsx file object
@@ -44,6 +44,20 @@ if nargin > 2
     Analog.logi = Analog.sig > threValue;
     Analog.logi = correctAnalogs(Analog.logi);    
 end
+
+if nargin > 3
+	if strcmp(opt, 'event')
+		% if analog ch getting event trigger
+		Analog.evt = double([Analog.logi 0]) - double([0 Analog.logi]);
+		Analog.evt(Analog.evt < 0) = 0;
+		Analog.evt = logical(Analog.evt);
+		Analog.evt = find(Analog.evt(1:end-1));
+	end
+end
+	
+Analog.vect = linspace(0, Analog.recordLeng, Analog.leng);
+orderfields(Analog)
+
 
 end
 

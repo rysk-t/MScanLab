@@ -1,24 +1,30 @@
 %% demo.m
-close all
+close all; clear all
 [fileName filePath] = uigetfile('*.MDF');
 mdfFile = [filePath fileName];
 
 
 %% Quick Summary Information and Averaged Image
-Summary = mdfSummary(mdfFile, 100);
+Summary = mdfSummary(mdfFile, 256);
 imshow(Summary.avg);
 disp(Summary)
+imwrite(Summary.avg, [mdfFile '.mean.tif'], 'tif')
 
-%% BASIC USAGE 1: Make Object & Read Information
+%% Make Object & Read Information
 close all; 
 f = figure;
 mObj  = makeMCSXObj(mdfFile, f);
 mInfo = mcsxInfo(mObj);
 
 %% Frame Process
-frames = mcsxReadFrames(mObj, 2, 1, 256);
+frames = mcsxReadFrames(mObj, 2, 1, 1000);
 
 %% Analog (if you recorded analog signal)
-analog = mcsxAnalog(mObj, 0, 0.5);
-figure;
-plot(linspace(0, analog.recordLeng, analog.leng), analog.sig);
+% e.g. detect event trigger pulse
+analog = mcsxAnalog(mObj, 0, 0.5, 'event');
+figure
+subplot(211)
+plot(analog.vect, analog.sig);
+subplot(212)
+plot(analog.vect, analog.logi); hold on
+plot(analog.vect(analog.evt), ones(length(analog.evt),1), 'rd');

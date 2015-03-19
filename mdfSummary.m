@@ -16,17 +16,25 @@ if openResult ==1
 end
 
 if nargin > 1
-    curCh = Get_specFrames(mfile, 1, 1, avgnframes, 512, false);
+    curCh = Get_specFrames(mfile, 1, 1, avgnframes, mcs_summary.frameheight, false);
     curCh = curCh./max(curCh(:));
     frames(:,:,1) = mean(curCh, 3);
-    curCh = Get_specFrames(mfile, 2, 1, avgnframes, 512, false);
+    curCh = Get_specFrames(mfile, 2, 1, avgnframes, mcs_summary.frameheight, false);
     curCh = curCh./max(curCh(:));
     frames(:,:,2) = mean(curCh, 3);
 
     frames(:,:,3) = frames(:,:,1);
+	
+	if exist('adapthisteq') == 2 
+		for i = 1:3
+			frames(:,:,i) = adapthisteq(frames(:,:,i));
+		end
+	end
+	
+	
     mcs_summary.avg = frames;
-    % frames = frames./max(frames(:));
-    % mcs_summary.avg = squeeze(mean(frames, 3));
+	
+	
 end
     
 close(1000)
