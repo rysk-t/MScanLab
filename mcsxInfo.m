@@ -1,49 +1,53 @@
-function mdfInfo = mcsxfInfo(mfile)
-% function mcsinfo = GetInfoMCSFile(mfile)
-% 
-%   mfile: mcsx_data object
+function mdfInfo = mcsxInfo(mObj)
+% function mcsxinfo = GetInfoMCSFile(mObj)
 %
-% Author: Takeuchi FR Mar 2014
+%   mObj: mcsx_data object made by makeMCSXObj function
+%
+% Author: Takeuchi FR Mar 2014, Kazuhito Hakumoto
 
 
 % Recording Status
-mdfInfo.User = invoke(mfile, 'ReadParameter', 'Created by');
-mdfInfo.Date = invoke(mfile, 'ReadParameter', 'Created on');
+mdfInfo.User = mObj.ReadParameter('Created by');
+mdfInfo.Date = mObj.ReadParameter('Created on');
 
 % Scales
-tmp = invoke(mfile, 'ReadParameter', 'Microns per Pixel');
+tmp = mObj.ReadParameter('Microns per Pixel');
 mdfInfo.um_per_pixel = str2double(tmp(1:end-2));
 
 % Lense
-mdfInfo.micronsPix = invoke(mfile, 'ReadParameter', 'Microns per Pixel');
-mdfInfo.Objective = invoke(mfile, 'ReadParameter', 'Objective');
+mdfInfo.micronsPix = mObj.ReadParameter('Microns per Pixel');
+mdfInfo.Objective = mObj.ReadParameter('Objective');
 
+% Laser
+mdfInfo.LaserPow   = mObj.ReadParameter('Laser intensity');
+mdfInfo.LaserWleng = str2double(mObj.ReadParameter('Laser Wavelength (nm)'));
 
 % Imaging Position
-tmp = invoke(mfile, 'ReadParameter', 'X Position');
+tmp = mObj.ReadParameter('X Position');
 mdfInfo.xPosition = str2double(tmp(1:end-2));
-tmp = invoke(mfile, 'ReadParameter', 'Y Position');
+tmp = mObj.ReadParameter('Y Position');
 mdfInfo.yPosition = str2double(tmp(1:end-2));
-tmp = invoke(mfile, 'ReadParameter', 'Z Position');
+tmp = mObj.ReadParameter('Z Position');
 mdfInfo.zPosition = str2double(tmp(1:end-2));
-mdfInfo.timebase = invoke(mfile, 'ReadParameter', 'Timebase');
-mdfInfo.imagingTrigger = invoke(mfile, 'ReadParameter', 'Imaging Trigger');
+mdfInfo.timebase = mObj.ReadParameter('Timebase');
+mdfInfo.imagingTrigger = mObj.ReadParameter('Imaging Trigger');
 
 % Frame Info
-mdfInfo.NofFrames = str2double(invoke(mfile, 'ReadParameter', 'Frame Count'));
-mdfInfo.frameheight = str2double(invoke(mfile, 'ReadParameter', 'Frame Height'));
-mdfInfo.framewidth = str2double(invoke(mfile, 'ReadParameter', 'Frame Width'));
+mdfInfo.NofFrames   = str2double(mObj.ReadParameter('Frame Count'));
+mdfInfo.frameheight = str2double(mObj.ReadParameter('Frame Height'));
+mdfInfo.framewidth  = str2double(mObj.ReadParameter('Frame Width'));
+mdfInfo.frameBitDep = mObj.ReadParameter('Frame Bit Depth');
 
-tmp = (invoke(mfile, 'ReadParameter', 'Magnification'));
+tmp = mObj.ReadParameter('Magnification');
 mdfInfo.magnification = str2double(tmp(1:end-1));
-tmp = invoke(mfile, 'ReadParameter', 'Frame Duration (s)');
+tmp = mObj.ReadParameter('Frame Duration (s)');
 mdfInfo.framerate = str2double(tmp(1:end-1));
 
 % Analog
 mdfInfo.AnalogFreq = ...
-    invoke(mfile, 'ReadParameter', ['Analog Acquisition Frequency (Hz)']);
+    mObj.ReadParameter(['Analog Acquisition Frequency (Hz)']);
 mdfInfo.AnalogRes = ...
-    invoke(mfile, 'ReadParameter', 'Analog resolution');
+    mObj.ReadParameter('Analog resolution');
 
 mdfInfo.AnalogRate = str2double(mdfInfo.AnalogFreq(1:end-2));
 

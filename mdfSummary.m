@@ -6,31 +6,31 @@ function mdf_summary = mdfSummary(mdffile, avgnframes)
 % Ryosuke F Takeuchi 2015
 
 disp('Loading MDF-File...')
-f             = figure(1000); 
-mfile         = actxcontrol('MCSX.Data', [0, 0, 500, 500], f);
-openResult    = mfile.invoke('OpenMCSFile', mdffile);
-mdf_summary   = mcsxInfo(mfile);
+mObj         = makeMCSXObj(mdffile);
+openResult    = mObj.invoke('OpenMCSFile', mdffile);
+mdf_summary   = mcsxInfo(mObj);
 
 if openResult ==1
-    disp([mcsfile ' succesfully loaded'])        
+    disp([mcsfile ' succesfully loaded'])
 end
 
 if nargin > 1
-    curCh = mcsxReadFrames(mfile, 1, 1, avgnframes);
+    curCh = mcsxReadFrames(mObj, 1, 1, avgnframes);
+		curCh = curCh - min(curCh(:));
     curCh = curCh./max(curCh(:));
     frames(:,:,1) = mean(curCh, 3);
-    curCh = mcsxReadFrames(mfile, 2, 1, avgnframes);
+    curCh = mcsxReadFrames(mObj, 2, 1, avgnframes);
     curCh = curCh./max(curCh(:));
     frames(:,:,2) = mean(curCh, 3);
 
     frames(:,:,3) = frames(:,:,1);
-	
-	if exist('adapthisteq') == 2 
+
+	if exist('adapthisteq') == 2
 		for i = 1:3
-			frames(:,:,i) = adapthisteq(frames(:,:,i));
+			frames(:,:,i) = 2*(frames(:,:,i));
 		end
-	end	
-    mdf_summary.avg = frames;	
+	end
+    mdf_summary.avg = frames;
 end
-    
-close(1000)
+
+clear mObj
