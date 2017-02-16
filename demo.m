@@ -3,7 +3,6 @@ close all; clear all
 [fileName filePath] = uigetfile('*.MDF');
 mdfFile = [filePath fileName];
 
-
 %% Quick Summary Information and Averaged Image
 Summary = mdfSummary(mdfFile, 256);
 imshow(Summary.avg);
