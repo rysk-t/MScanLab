@@ -2,7 +2,9 @@
 Essential matlab functions for analyzing .MDF created by **MScan** (Inc. SutterInstruments).
 
 ## Dependency
-**Windows, Matlab(>2010b)**
+ - **Windows**
+ - **Matlab(>2010b)**
+
 Inaddition to above, you have to install [Mview](http://www.sutter.com/SOFTWARE/microscope_frame.html).
 All codes are tested with Matlab2015a & MView(3.0.0.2)
 
